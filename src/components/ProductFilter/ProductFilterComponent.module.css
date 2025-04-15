@@ -1,0 +1,74 @@
+.productFilter {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.filterGroup label {
+  min-width: 80px;
+  font-weight: 500;
+}
+
+.filterGroup select,
+.filterGroup input {
+  padding: 0.5rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.filterGroup input {
+  width: 120px;
+}
+
+.filterGroup span {
+  margin: 0 0.5rem;
+}
+
+.resetButton {
+  align-self: flex-end;
+  padding: 0.5rem 1rem;
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.resetButton:hover {
+  background-color: #cc0000;
+}
+
+/* 카테고리 토글 버튼 스타일 */
+.categoryToggleGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.categoryToggle {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.categoryToggle.active {
+  background-color: #4a90e2;
+  color: white;
+  border-color: #4a90e2;
+}

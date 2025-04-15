@@ -2,7 +2,7 @@
 export interface Product {
   id: string;
   name: string;
-  category: string;
+  category: Category;
   price: number;
   description?: string;
   imageUrl?: string;
@@ -22,8 +22,9 @@ export interface PriceFilter {
 
 // 필터 옵션 인터페이스
 export interface FilterOptions {
-  category?: Category;
-  priceRange?: PriceFilter;
+  categories?: Category[];
+  minPrice?: number;
+  maxPrice?: number;
   searchQuery?: string;
 }
 

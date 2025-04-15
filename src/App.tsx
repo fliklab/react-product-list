@@ -1,14 +1,8 @@
 import "./App.css";
-import ProductList from "./components/ProductList/ProductList";
-import { mockProducts } from "./server/data";
+import { ProductListContainer } from "./components/ProductList/ProductListContainer";
 
 function App() {
-  return (
-    <>
-      <h1>상품 목록</h1>
-      <ProductList data={mockProducts}></ProductList>
-    </>
-  );
+  return <ProductListContainer />;
 }
 
 export default App;

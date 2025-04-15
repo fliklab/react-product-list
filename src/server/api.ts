@@ -114,15 +114,15 @@ export class MockProductAPI {
     products: Product[],
     filters: FilterOptions
   ): Product[] {
-    const { category, priceRange } = filters;
+    const { categories, minPrice, maxPrice } = filters;
 
-    return products.filter((product) => {
-      if (category && product.category !== category) return false;
-      if (priceRange && priceRange.min && product.price < priceRange.min)
-        return false;
-      if (priceRange && priceRange.max && product.price > priceRange.max)
-        return false;
+    const isProductIncluded = (product: Product) => {
+      if (categories && !categories.includes(product.category)) return false;
+      if (minPrice && product.price < minPrice) return false;
+      if (maxPrice && product.price > maxPrice) return false;
       return true;
-    });
+    };
+
+    return products.filter(isProductIncluded);
   }
 }
