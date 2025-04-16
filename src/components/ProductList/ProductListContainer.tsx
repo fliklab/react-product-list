@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Category, Product } from "../../server/types";
+import { Category, Product, QueryOptions } from "../../server/types";
 import { MockProductAPI } from "../../server/api";
 import { ProductFilterComponent } from "../ProductFilter/ProductFilterComponent";
 import { ProductList } from "./ProductList";
 import { usePersistedQueryOption } from "../../hooks/usePersistedFilter";
-import { useProductFilter } from "../../hooks/useProductFilter";
 
 export const ProductListContainer: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -15,16 +14,13 @@ export const ProductListContainer: React.FC = () => {
   const { option, updateOption, resetOption } =
     usePersistedQueryOption("product-filter");
 
-  // 필터링 로직
-  const { filteredProducts } = useProductFilter(products, option);
-
   // 초기 데이터 로드
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchProducts = async (option: QueryOptions) => {
       try {
         setLoading(true);
         const api = new MockProductAPI();
-        const data = await api.getProducts();
+        const data = await api.getProducts(option);
         setProducts(data.data);
 
         // 고유 카테고리 추출
@@ -39,8 +35,8 @@ export const ProductListContainer: React.FC = () => {
       }
     };
 
-    fetchProducts();
-  }, []);
+    fetchProducts(option);
+  }, [option]);
 
   if (loading) {
     return <div>상품을 불러오는 중...</div>;
@@ -57,7 +53,7 @@ export const ProductListContainer: React.FC = () => {
         onReset={resetOption}
       />
 
-      <ProductList data={filteredProducts} />
+      <ProductList data={products} />
     </div>
   );
 };
