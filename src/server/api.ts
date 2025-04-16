@@ -38,7 +38,19 @@ export class MockProductAPI {
       anchor: nextAnchor,
     };
 
-    console.log("getProducts", response);
+    // 네트워크 지연을 시뮬레이션
+    await new Promise((resolve) =>
+      setTimeout(resolve, 500 + 8 * Math.random() * 100)
+    );
+
+    const request = {
+      options,
+      anchor,
+      limit,
+    };
+
+    console.log("getProducts", { request, response });
+
     return response;
   }
 
