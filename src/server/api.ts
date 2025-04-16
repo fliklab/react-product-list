@@ -1,5 +1,5 @@
 import { mockProducts } from "./data";
-import { ApiResponse, FilterOptions, Product } from "./types";
+import { ApiResponse, QueryOptions, Product } from "./types";
 
 // 앵커 기반 시스템 구현
 export class MockProductAPI {
@@ -8,12 +8,12 @@ export class MockProductAPI {
 
   // 상품 목록 조회 (앵커 기반 페이지네이션)
   async getProducts(
-    filters: FilterOptions = {},
+    options: QueryOptions = {},
     anchor?: string,
     limit: number = this.pageSize
   ): Promise<ApiResponse<Product[]>> {
     // 필터링된 상품 생성
-    const filteredProducts = this.filterProducts(this.products, filters);
+    const filteredProducts = this.filterAndSortProducts(this.products, options);
 
     // 앵커 기반 페이지네이션
     let startIndex = 0;
@@ -31,12 +31,15 @@ export class MockProductAPI {
       ? pagedProducts[pagedProducts.length - 1].id
       : undefined;
 
-    return {
+    const response = {
       data: pagedProducts,
       totalCount: filteredProducts.length,
       hasMore,
       anchor: nextAnchor,
     };
+
+    console.log("getProducts", response);
+    return response;
   }
 
   // 상품 등록
@@ -110,11 +113,11 @@ export class MockProductAPI {
   }
 
   // 필터링 로직
-  private filterProducts(
+  private filterAndSortProducts(
     products: Product[],
-    filters: FilterOptions
+    options: QueryOptions
   ): Product[] {
-    const { categories, minPrice, maxPrice } = filters;
+    const { categories, minPrice, maxPrice, sortBy, sortOrder } = options;
 
     const isProductIncluded = (product: Product) => {
       if (categories && !categories.includes(product.category)) return false;
@@ -123,6 +126,18 @@ export class MockProductAPI {
       return true;
     };
 
-    return products.filter(isProductIncluded);
+    const filteredProducts = products.filter(isProductIncluded).sort((a, b) => {
+      if (sortBy === "price") {
+        return sortOrder === "asc" ? a.price - b.price : b.price - a.price;
+      }
+      if (sortBy === "name") {
+        return sortOrder === "asc"
+          ? a.name.localeCompare(b.name)
+          : b.name.localeCompare(a.name);
+      }
+      return 0;
+    });
+
+    return filteredProducts;
   }
 }

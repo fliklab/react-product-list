@@ -14,18 +14,14 @@ export interface Product {
 // 카테고리 타입
 export type Category = "상의" | "하의" | "원피스" | "아우터" | "액세서리";
 
-// 가격 필터 인터페이스
-export interface PriceFilter {
-  min?: number;
-  max?: number;
-}
-
 // 필터 옵션 인터페이스
-export interface FilterOptions {
+export interface QueryOptions {
   categories?: Category[];
   minPrice?: number;
   maxPrice?: number;
   searchQuery?: string;
+  sortBy?: "price" | "name";
+  sortOrder?: "asc" | "desc";
 }
 
 // API 응답 인터페이스

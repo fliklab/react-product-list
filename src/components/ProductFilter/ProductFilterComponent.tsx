@@ -1,13 +1,13 @@
 import React from "react";
-import { Category, FilterOptions } from "../../server/types";
+import { Category, QueryOptions } from "../../server/types";
 import styles from "./ProductFilterComponent.module.css";
 
 type CategoryLabel = Category | "전체";
 
 interface ProductFilterCommponentProps {
-  filter: FilterOptions;
+  filter: QueryOptions;
   categories: Category[];
-  onFilterChange: (filter: Partial<FilterOptions>) => void;
+  onFilterChange: (filter: Partial<QueryOptions>) => void;
   onReset: () => void;
 }
 
@@ -55,6 +55,15 @@ export const ProductFilterComponent: React.FC<ProductFilterCommponentProps> = ({
     onFilterChange({ [type]: numberValue });
   };
 
+  // 정렬 핸들러
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const [sortBy, sortOrder] = e.target.value.split("-");
+    onFilterChange({
+      sortBy: sortBy as "price" | "name",
+      sortOrder: sortOrder as "asc" | "desc",
+    });
+  };
+
   return (
     <div className={styles.productFilter}>
       <div className={styles.filterGroup}>
@@ -97,6 +106,22 @@ export const ProductFilterComponent: React.FC<ProductFilterCommponentProps> = ({
           value={filter.maxPrice || ""}
           onChange={(e) => handlePriceChange("maxPrice", e.target.value)}
         />
+      </div>
+
+      <div className={styles.filterGroup}>
+        <label>정렬:</label>
+        <select
+          value={
+            filter.sortBy ? `${filter.sortBy}-${filter.sortOrder || "asc"}` : ""
+          }
+          onChange={handleSortChange}
+        >
+          <option value="">기본 정렬</option>
+          <option value="price-asc">가격 낮은순</option>
+          <option value="price-desc">가격 높은순</option>
+          <option value="name-asc">이름 오름차순</option>
+          <option value="name-desc">이름 내림차순</option>
+        </select>
       </div>
 
       <div className={styles.filterGroup}>

@@ -3,7 +3,7 @@ import { Category, Product } from "../../server/types";
 import { MockProductAPI } from "../../server/api";
 import { ProductFilterComponent } from "../ProductFilter/ProductFilterComponent";
 import { ProductList } from "./ProductList";
-import { usePersistedFilter } from "../../hooks/usePersistedFilter";
+import { usePersistedQueryOption } from "../../hooks/usePersistedFilter";
 import { useProductFilter } from "../../hooks/useProductFilter";
 
 export const ProductListContainer: React.FC = () => {
@@ -12,11 +12,11 @@ export const ProductListContainer: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
 
   // 페이지 새로고침/재접속 시에도 필터 상태 유지
-  const { filter, updateFilter, resetFilter } =
-    usePersistedFilter("product-filter");
+  const { option, updateOption, resetOption } =
+    usePersistedQueryOption("product-filter");
 
   // 필터링 로직
-  const { filteredProducts } = useProductFilter(products, filter);
+  const { filteredProducts } = useProductFilter(products, option);
 
   // 초기 데이터 로드
   useEffect(() => {
@@ -51,10 +51,10 @@ export const ProductListContainer: React.FC = () => {
       <h1>상품 목록</h1>
 
       <ProductFilterComponent
-        filter={filter}
+        filter={option}
         categories={categories}
-        onFilterChange={updateFilter}
-        onReset={resetFilter}
+        onFilterChange={updateOption}
+        onReset={resetOption}
       />
 
       <ProductList data={filteredProducts} />
