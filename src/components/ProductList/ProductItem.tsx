@@ -1,11 +1,10 @@
 import { Product } from "../../server/types";
 import styles from "./ProductItem.module.css";
 
-export interface ProductItemProps extends Product {
-  key: string;
-}
+export interface ProductItemProps extends Product {}
 
 export const ProductItem: React.FC<ProductItemProps> = ({
+  id,
   name,
   price,
   category,
@@ -16,7 +15,9 @@ export const ProductItem: React.FC<ProductItemProps> = ({
       <div className={styles.productImagePlaceholder}>
         {imageUrl ? (
           <img className={styles.productThumbnail} src={imageUrl} alt={name} />
-        ) : null}
+        ) : (
+          <span>{id}</span>
+        )}
       </div>
       <div className={styles.productInfo}>
         <div className={styles.productNameContainer}>
