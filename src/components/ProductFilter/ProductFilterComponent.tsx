@@ -125,8 +125,7 @@ export const ProductFilterComponent: React.FC<ProductFilterCommponentProps> = ({
 
       <div className={styles.filterGroup}>
         <label>디버그:</label>
-        <input
-          type="text"
+        <textarea
           value={JSON.stringify(filter, null, 2)}
           readOnly
           style={{ width: "300px", height: "100px", fontFamily: "monospace" }}
