@@ -39,12 +39,13 @@ export const ProductListContainer: React.FC = () => {
 
   // 초기 데이터 로드
   useEffect(() => {
-    const fetchProducts = async (option: QueryOptions, anchor?: string) => {
+    const fetchProducts = async (option: QueryOptions) => {
       try {
         setLoading(true);
         setInitialLoad(true);
+
         const api = new MockProductAPI();
-        const data = await api.getProducts(option, anchor);
+        const data = await api.getProducts(option, undefined); // anchor 초기화
 
         setProducts(data.data);
         setAnchor(data.anchor);
@@ -63,7 +64,7 @@ export const ProductListContainer: React.FC = () => {
       }
     };
 
-    fetchProducts(option, anchor);
+    fetchProducts(option);
   }, [option]);
 
   // 추가 데이터 로드 함수
