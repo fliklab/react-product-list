@@ -1,5 +1,5 @@
 import React from "react";
-import { Category, QueryOptions } from "../../server/types";
+import { CATEGORIES, Category, QueryOptions } from "../../server/types";
 import styles from "./ProductFilterComponent.module.css";
 
 type CategoryLabel = Category | "전체";
@@ -13,7 +13,6 @@ interface ProductFilterCommponentProps {
 
 export const ProductFilterComponent: React.FC<ProductFilterCommponentProps> = ({
   filter,
-  categories,
   onFilterChange,
   onReset,
 }) => {
@@ -77,7 +76,7 @@ export const ProductFilterComponent: React.FC<ProductFilterCommponentProps> = ({
           >
             전체
           </button>
-          {categories.map((category) => (
+          {CATEGORIES.map((category) => (
             <button
               key={category}
               className={`${styles.categoryToggle} ${

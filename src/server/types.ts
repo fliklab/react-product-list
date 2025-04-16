@@ -11,8 +11,14 @@ export interface Product {
   createdAt?: Date;
 }
 
-// 카테고리 타입
-export type Category = "상의" | "하의" | "원피스" | "아우터" | "액세서리";
+export const CATEGORIES = [
+  "상의",
+  "하의",
+  "원피스",
+  "아우터",
+  "액세서리",
+] as const;
+export type Category = (typeof CATEGORIES)[number];
 
 // 필터 옵션 인터페이스
 export interface QueryOptions {
