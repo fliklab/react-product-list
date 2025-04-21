@@ -4,7 +4,7 @@ import { MockProductAPI } from "../../server/api";
 import { ProductFilterComponent } from "../ProductFilter/ProductFilterComponent";
 import { ProductList } from "./ProductList";
 import { usePersistedQueryOption } from "../../hooks/usePersistedFilter";
-import { Loader } from "../common/Loader";
+import { Loader } from "../common/Loader/index";
 import styles from "./ProductListContainer.module.css";
 
 export const ProductListContainer: React.FC = () => {
