@@ -5,6 +5,7 @@ import { ProductFilterComponent } from "../ProductFilter/ProductFilterComponent"
 import { ProductList } from "./ProductList";
 import { usePersistedQueryOption } from "../../hooks/usePersistedFilter";
 import { Loader } from "../common/Loader";
+import styles from "./ProductListContainer.module.css";
 
 export const ProductListContainer: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -20,6 +21,28 @@ export const ProductListContainer: React.FC = () => {
   const { option, updateOption, resetOption } =
     usePersistedQueryOption("product-filter");
 
+  // 추가 데이터 로드 함수
+  const fetchMoreProducts = useCallback(
+    async (option: QueryOptions, anchor?: string) => {
+      if (!hasMore || loading) return;
+
+      try {
+        setLoading(true);
+        const api = new MockProductAPI();
+        const data = await api.getProducts(option, anchor);
+
+        setProducts((prevProducts) => [...prevProducts, ...data.data]);
+        setAnchor(data.anchor);
+        setHasMore(data.hasMore);
+      } catch (error) {
+        console.error("추가 상품 로딩 실패:", error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [hasMore, loading]
+  );
+
   const observer = useRef<IntersectionObserver | null>(null);
   const lastProductRef = useCallback(
     (node: HTMLDivElement | null) => {
@@ -34,7 +57,7 @@ export const ProductListContainer: React.FC = () => {
 
       if (node) observer.current.observe(node);
     },
-    [loading, hasMore, option, anchor]
+    [loading, hasMore, fetchMoreProducts, option, anchor]
   );
 
   // 초기 데이터 로드
@@ -67,31 +90,12 @@ export const ProductListContainer: React.FC = () => {
     fetchProducts(option);
   }, [option]);
 
-  // 추가 데이터 로드 함수
-  const fetchMoreProducts = async (option: QueryOptions, anchor?: string) => {
-    if (!hasMore || loading) return;
-
-    try {
-      setLoading(true);
-      const api = new MockProductAPI();
-      const data = await api.getProducts(option, anchor);
-
-      setProducts((prevProducts) => [...prevProducts, ...data.data]);
-      setAnchor(data.anchor);
-      setHasMore(data.hasMore);
-    } catch (error) {
-      console.error("추가 상품 로딩 실패:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   if (initialLoad && loading) {
     return <Loader size="large" text="상품을 불러오는 중..." />;
   }
 
   return (
-    <div className="product-container">
+    <div className={styles.productContainer}>
       <h1>상품 목록</h1>
 
       <ProductFilterComponent
@@ -107,7 +111,7 @@ export const ProductListContainer: React.FC = () => {
         <Loader size="small" text="추가 상품을 불러오는 중..." />
       )}
       {!hasMore && products.length > 0 && (
-        <div className="no-more-products">모든 상품을 불러왔습니다.</div>
+        <div className={styles.noMoreProducts}>모든 상품을 불러왔습니다.</div>
       )}
     </div>
   );

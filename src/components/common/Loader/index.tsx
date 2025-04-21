@@ -1,5 +1,5 @@
 import React from "react";
-import "./Loader.css";
+import styles from "./Loader.module.css";
 
 interface LoaderProps {
   size?: "small" | "medium" | "large";
@@ -11,9 +11,9 @@ export const Loader: React.FC<LoaderProps> = ({
   text = "로딩 중...",
 }) => {
   return (
-    <div className="loader-container">
-      <div className={`spinner ${size}`}></div>
-      {text && <p className="loader-text">{text}</p>}
+    <div className={styles.loaderContainer}>
+      <div className={`${styles.spinner} ${styles[size]}`}></div>
+      {text && <p className={styles.loaderText}>{text}</p>}
     </div>
   );
 };
