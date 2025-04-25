@@ -5,7 +5,40 @@ import { ProductFilterComponent } from "../ProductFilter/ProductFilterComponent"
 import { ProductList } from "./ProductList";
 import { usePersistedQueryOption } from "../../hooks/usePersistedFilter";
 import { Loader } from "../common/Loader/index";
-import styles from "./ProductListContainer.module.css";
+import styled from "@emotion/styled";
+
+const PageContainer = styled.div`
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: ${(props) => props.theme.spacing.lg} 0;
+`;
+
+const ContentContainer = styled.div`
+  width: 100%;
+  max-width: 1024px;
+  margin: 0 auto;
+  padding: 0 ${(props) => props.theme.spacing.lg};
+
+  @media (max-width: ${(props) => props.theme.breakpoints.md}) {
+    padding: 0 ${(props) => props.theme.spacing.md};
+  }
+`;
+
+const ListContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: ${(props) => props.theme.spacing.lg};
+`;
+
+const LoaderWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  padding: ${(props) => props.theme.spacing.xl} 0;
+`;
 
 export const ProductListContainer: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -90,29 +123,38 @@ export const ProductListContainer: React.FC = () => {
     fetchProducts(option);
   }, [option]);
 
-  if (initialLoad && loading) {
-    return <Loader size="large" text="상품을 불러오는 중..." />;
-  }
-
   return (
-    <div className={styles.productContainer}>
-      <h1>상품 목록</h1>
+    <PageContainer>
+      <ContentContainer>
+        <ListContainer>
+          <ProductFilterComponent
+            filter={option}
+            categories={categories}
+            onFilterChange={updateOption}
+            onReset={resetOption}
+          />
 
-      <ProductFilterComponent
-        filter={option}
-        categories={categories}
-        onFilterChange={updateOption}
-        onReset={resetOption}
-      />
-
-      <ProductList data={products} lastProductRef={lastProductRef} />
-
-      {loading && !initialLoad && (
-        <Loader size="small" text="추가 상품을 불러오는 중..." />
-      )}
-      {!hasMore && products.length > 0 && (
-        <div className={styles.noMoreProducts}>모든 상품을 불러왔습니다.</div>
-      )}
-    </div>
+          {initialLoad ? (
+            <LoaderWrapper>
+              <Loader size="large" text="상품을 불러오는 중..." />
+            </LoaderWrapper>
+          ) : (
+            <>
+              <ProductList data={products} lastProductRef={lastProductRef} />
+              {loading && !initialLoad && (
+                <LoaderWrapper>
+                  <Loader size="small" text="추가 상품을 불러오는 중..." />
+                </LoaderWrapper>
+              )}
+              {!hasMore && products.length > 0 && (
+                <LoaderWrapper>
+                  <div>모든 상품을 불러왔습니다.</div>
+                </LoaderWrapper>
+              )}
+            </>
+          )}
+        </ListContainer>
+      </ContentContainer>
+    </PageContainer>
   );
 };

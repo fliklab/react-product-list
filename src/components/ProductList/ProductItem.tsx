@@ -1,11 +1,6 @@
 import { Product } from "../../server/types";
 import styled from "@emotion/styled";
-import {
-  Badge,
-  CardBase,
-  FlexContainer,
-  responsiveText,
-} from "../../styles/common";
+import { Badge, CardBase, FlexContainer } from "../../styles/common";
 
 export type ItemProps = Product;
 
@@ -51,17 +46,15 @@ const ProductHeader = styled(FlexContainer)`
   flex-wrap: wrap;
 `;
 
-const Category = styled(Badge)``;
-
 const ProductName = styled.h3`
-  ${responsiveText("lg")}
+  font-size: ${(props) => props.theme.typography.fontSizes.lg};
   font-weight: ${(props) => props.theme.typography.fontWeights.bold};
   color: ${(props) => props.theme.colors.text.primary};
   margin: 0;
 `;
 
 const Price = styled.span`
-  ${responsiveText("lg")}
+  font-size: ${(props) => props.theme.typography.fontSizes.lg};
   font-weight: ${(props) => props.theme.typography.fontWeights.bold};
   color: ${(props) => props.theme.colors.primary.main};
 `;
@@ -84,7 +77,7 @@ export const ProductItem: React.FC<ItemProps> = ({
       </ImageContainer>
       <ProductInfo gap="sm">
         <ProductHeader gap="sm">
-          <Category>{category}</Category>
+          <Badge variant={category}>{category}</Badge>
           <ProductName>{name}</ProductName>
         </ProductHeader>
         <Price>{price.toLocaleString()}원</Price>

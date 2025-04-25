@@ -1,17 +1,6 @@
 import styled from "@emotion/styled";
 import { css } from "@emotion/react";
-
-// 반응형 텍스트 스타일
-export const responsiveText = (size: "sm" | "md" | "lg") => css`
-  font-size: ${(props) => props.theme.typography.fontSizes[size]};
-
-  @media (max-width: ${(props) => props.theme.breakpoints.sm}) {
-    font-size: ${(props) =>
-      props.theme.typography.fontSizes[
-        size === "sm" ? "xs" : size === "md" ? "sm" : "md"
-      ]};
-  }
-`;
+import { Category } from "../server/types";
 
 // 기본 카드 스타일
 export const CardBase = styled.div`
@@ -51,11 +40,45 @@ export const FlexContainer = styled.div<{
 `;
 
 // 배지 스타일
-export const Badge = styled.span`
+export const Badge = styled.span<{ variant?: Category }>`
   font-size: ${(props) => props.theme.typography.fontSizes.sm};
-  color: ${(props) => props.theme.colors.text.secondary};
-  background-color: ${(props) => props.theme.colors.background.paper};
   padding: ${(props) => props.theme.spacing.xs}
     ${(props) => props.theme.spacing.sm};
   border-radius: ${(props) => props.theme.borderRadius.sm};
+  font-weight: ${(props) => props.theme.typography.fontWeights.medium};
+
+  ${({ variant }) => {
+    switch (variant) {
+      case "상의":
+        return css`
+          background-color: #e3f2fd;
+          color: #1976d2;
+        `;
+      case "하의":
+        return css`
+          background-color: #e8f5e9;
+          color: #2e7d32;
+        `;
+      case "아우터":
+        return css`
+          background-color: #f3e5d9;
+          color: #d4573c;
+        `;
+      case "원피스":
+        return css`
+          background-color: #f3e5f5;
+          color: #9c27b0;
+        `;
+      case "액세서리":
+        return css`
+          background-color: #e1f5fe;
+          color: #0288d1;
+        `;
+      default:
+        return css`
+          background-color: #f5f5f5;
+          color: #616161;
+        `;
+    }
+  }}
 `;

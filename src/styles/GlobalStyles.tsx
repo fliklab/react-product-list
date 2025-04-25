@@ -9,6 +9,16 @@ export const GlobalStyles = () => (
         box-sizing: border-box;
       }
 
+      html,
+      body,
+      #root {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        flex: 1;
+        display: flex;
+      }
+
       html {
         font-size: 16px;
 
@@ -20,8 +30,8 @@ export const GlobalStyles = () => (
       body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-        background-color: ${theme.colors.background.default};
-        color: ${theme.colors.text.primary};
+        background-color: #ffffff !important;
+        color: #333333 !important;
         line-height: ${theme.typography.lineHeights.normal};
         font-size: ${theme.typography.fontSizes.md};
       }
@@ -29,21 +39,25 @@ export const GlobalStyles = () => (
       h1 {
         font-size: ${theme.typography.fontSizes.xxl};
         font-weight: ${theme.typography.fontWeights.bold};
+        color: #333333;
       }
 
       h2 {
         font-size: ${theme.typography.fontSizes.xl};
         font-weight: ${theme.typography.fontWeights.bold};
+        color: #333333;
       }
 
       h3 {
         font-size: ${theme.typography.fontSizes.lg};
         font-weight: ${theme.typography.fontWeights.medium};
+        color: #333333;
       }
 
       p {
         font-size: ${theme.typography.fontSizes.md};
         margin-bottom: ${theme.spacing.md};
+        color: #333333;
       }
 
       button {
@@ -54,6 +68,7 @@ export const GlobalStyles = () => (
         padding: ${theme.spacing.sm} ${theme.spacing.md};
         border-radius: ${theme.borderRadius.sm};
         transition: all ${theme.transitions.duration.fast};
+        color: #333333;
 
         &:disabled {
           cursor: not-allowed;
@@ -66,24 +81,25 @@ export const GlobalStyles = () => (
       textarea {
         font: inherit;
         padding: ${theme.spacing.sm} ${theme.spacing.md};
-        border: 1px solid ${theme.colors.border.main};
+        border: 1px solid #e0e0e0;
         border-radius: ${theme.borderRadius.sm};
-        background-color: ${theme.colors.background.default};
+        background-color: #ffffff !important;
         width: 100%;
         transition: all ${theme.transitions.duration.fast};
+        color: #333333 !important;
 
         &:focus {
           outline: none;
-          border-color: ${theme.colors.primary.main};
-          box-shadow: 0 0 0 2px ${theme.colors.primary.light}33;
+          border-color: #4a90e2;
+          box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
         }
 
         &::placeholder {
-          color: ${theme.colors.text.disabled};
+          color: #757575;
         }
 
         &:disabled {
-          background-color: ${theme.colors.grey[100]};
+          background-color: #f5f5f5 !important;
           cursor: not-allowed;
         }
       }
@@ -99,6 +115,7 @@ export const GlobalStyles = () => (
       textarea {
         min-height: 100px;
         resize: vertical;
+        color: #333333 !important;
       }
     `}
   />
