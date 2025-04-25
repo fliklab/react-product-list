@@ -15,7 +15,6 @@ const AppWrapper = styled.div`
   width: 100%;
   min-height: 100vh;
   background-color: ${(props) => props.theme.colors.background.default};
-  border: 1px solid blue;
 `;
 
 const AppContainer = styled.div`
@@ -26,7 +25,6 @@ const AppContainer = styled.div`
   align-items: center;
   background-color: white;
   min-height: 100vh;
-  border: 1px solid red;
 `;
 
 const PageContent = styled.div`
