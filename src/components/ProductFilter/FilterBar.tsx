@@ -7,6 +7,7 @@ import { CATEGORIES } from "../../server/types";
 interface FilterBarProps {
   filter: QueryOptions;
   onFilterChange: (filter: QueryOptions) => void;
+  onReset: () => void;
 }
 
 const FilterBarContainer = styled.div`
@@ -55,11 +56,21 @@ const FilterDropdownContainer = styled.div`
   position: relative;
 `;
 
+const ResetButton = styled.button`
+  padding: ${(props) => props.theme.spacing.sm}
+    ${(props) => props.theme.spacing.lg};
+  background-color: ${(props) => props.theme.colors.background.paper};
+  border-radius: ${(props) => props.theme.borderRadius.pill};
+  color: ${(props) => props.theme.colors.text.primary};
+  border: none;
+`;
+
 type ActiveDropdown = "category" | "price" | "sort" | null;
 
 export const FilterBar: React.FC<FilterBarProps> = ({
   filter,
   onFilterChange,
+  onReset,
 }) => {
   const [activeDropdown, setActiveDropdown] = useState<ActiveDropdown>(null);
 
@@ -100,16 +111,20 @@ export const FilterBar: React.FC<FilterBarProps> = ({
         return "카테고리";
       case "price":
         if (filter.minPrice || filter.maxPrice) {
-          return `가격: ${
-            filter.minPrice ? formatPrice(filter.minPrice) : 0
-          } ~ ${filter.maxPrice ? formatPrice(filter.maxPrice) : "무제한"}`;
+          return `${
+            filter.minPrice ? formatPrice(filter.minPrice) + "원" : 0
+          } ~ ${filter.maxPrice ? formatPrice(filter.maxPrice) + "원" : ""}`;
         }
         return "가격";
       case "sort":
         if (filter.sortBy) {
-          return `${filter.sortBy === "price" ? "가격" : "이름"}${
-            filter.sortOrder === "asc" ? " 오름차순" : " 내림차순"
-          }`;
+          if (filter.sortBy === "price") {
+            return `가격 ${filter.sortOrder === "asc" ? "낮은순" : "높은순"}`;
+          } else {
+            return `이름 ${
+              filter.sortOrder === "asc" ? "오름차순" : "내림차순"
+            }`;
+          }
         }
         return "정렬";
       default:
@@ -169,6 +184,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
           />
         )}
       </FilterDropdownContainer>
+      <ResetButton onClick={onReset}>초기화</ResetButton>
     </FilterBarContainer>
   );
 };
