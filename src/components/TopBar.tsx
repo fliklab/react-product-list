@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, Link } from "react-router-dom";
 import styled from "@emotion/styled";
 import { IoHomeOutline, IoHeartOutline, IoArrowBack } from "react-icons/io5";
 
@@ -56,6 +56,13 @@ const Title = styled.h1`
   text-align: center;
 `;
 
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: center;
+`;
+
 export const TopBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -74,13 +81,17 @@ export const TopBar = () => {
         <Title>{isLikedPage ? "내가 찜한 상품" : "쇼핑 리스트"}</Title>
         <IconGroup>
           {!isLikedPage && (
-            <IconButton onClick={() => navigate("/liked")}>
-              <IoHeartOutline />
-            </IconButton>
+            <StyledLink to="/liked">
+              <IconButton>
+                <IoHeartOutline />
+              </IconButton>
+            </StyledLink>
           )}
-          <IconButton onClick={() => navigate("/")}>
-            <IoHomeOutline />
-          </IconButton>
+          <StyledLink to="/">
+            <IconButton>
+              <IoHomeOutline />
+            </IconButton>
+          </StyledLink>
         </IconGroup>
       </TopBarContainer>
     </TopBarWrapper>
