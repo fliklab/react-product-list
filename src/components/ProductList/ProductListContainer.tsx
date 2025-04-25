@@ -7,6 +7,7 @@ import { useQueryOptions } from "../../hooks/useQueryOptions";
 import { Loader } from "../common/Loader/index";
 import { SearchBox } from "../Search/SearchBox";
 import styled from "@emotion/styled";
+import { useLikedItems } from "../../hooks/useLikedItems";
 
 const PageContainer = styled.div`
   flex: 1;
@@ -53,6 +54,7 @@ export const ProductListContainer: React.FC = () => {
 
   // URL 쿼리 파라미터 사용
   const { option, updateOption, resetOption } = useQueryOptions();
+  const { toggleItem, isItemLiked } = useLikedItems();
 
   // API 인스턴스를 메모이제이션
   const api = useRef(new MockProductAPI());
@@ -69,7 +71,15 @@ export const ProductListContainer: React.FC = () => {
           currentAnchor
         );
 
-        setProducts((prevProducts) => [...prevProducts, ...data.data]);
+        const productsWithLikeStatus = data.data.map((product) => ({
+          ...product,
+          isLiked: isItemLiked(Number(product.id)),
+        }));
+
+        setProducts((prevProducts) => [
+          ...prevProducts,
+          ...productsWithLikeStatus,
+        ]);
         setAnchor(data.anchor);
         setHasMore(data.hasMore);
       } catch (error) {
@@ -78,7 +88,7 @@ export const ProductListContainer: React.FC = () => {
         setLoading(false);
       }
     },
-    [hasMore, loading]
+    [hasMore, loading, isItemLiked]
   );
 
   const observer = useRef<IntersectionObserver | null>(null);
@@ -106,7 +116,12 @@ export const ProductListContainer: React.FC = () => {
         setInitialLoad(true);
 
         const data = await api.current.getProducts(option, undefined);
-        setProducts(data.data);
+        const productsWithLikeStatus = data.data.map((product) => ({
+          ...product,
+          isLiked: isItemLiked(Number(product.id)),
+        }));
+
+        setProducts(productsWithLikeStatus);
         setAnchor(data.anchor);
         setHasMore(data.hasMore);
 
@@ -123,11 +138,28 @@ export const ProductListContainer: React.FC = () => {
     };
 
     fetchInitialProducts();
-  }, [option]);
+  }, [option, isItemLiked]);
 
   const handleSearch = (query: string) => {
     updateOption({ searchQuery: query || undefined });
   };
+
+  const handleLikeToggle = useCallback(
+    (product: Product) => {
+      const isLiked = toggleItem({
+        id: Number(product.id),
+        name: product.name,
+        price: product.price,
+        image: product.imageUrl || "",
+      });
+
+      // 개별 상품의 isLiked 상태만 업데이트
+      setProducts((prevProducts) =>
+        prevProducts.map((p) => (p.id === product.id ? { ...p, isLiked } : p))
+      );
+    },
+    [toggleItem]
+  );
 
   return (
     <PageContainer>
@@ -153,7 +185,11 @@ export const ProductListContainer: React.FC = () => {
             </LoaderWrapper>
           ) : (
             <>
-              <ProductList data={products} lastProductRef={lastProductRef} />
+              <ProductList
+                data={products}
+                lastProductRef={lastProductRef}
+                onLikeToggle={handleLikeToggle}
+              />
               {loading && !initialLoad && (
                 <LoaderWrapper>
                   <Loader size="small" text="추가 상품을 불러오는 중..." />

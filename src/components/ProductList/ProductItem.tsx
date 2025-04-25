@@ -1,8 +1,12 @@
+import React, { useCallback } from "react";
 import { Product } from "../../server/types";
 import styled from "@emotion/styled";
 import { Badge, CardBase, FlexContainer } from "../../styles/common";
+import { IoHeartOutline, IoHeart } from "react-icons/io5";
 
-export type ItemProps = Product;
+export interface ItemProps extends Product {
+  onLikeToggle?: (item: Product) => void;
+}
 
 const ProductItemContainer = styled(CardBase)`
   display: flex;
@@ -10,9 +14,30 @@ const ProductItemContainer = styled(CardBase)`
   padding: ${(props) => props.theme.spacing.lg};
   gap: ${(props) => props.theme.spacing.md};
   cursor: pointer;
+  position: relative;
 
   @media (max-width: ${(props) => props.theme.breakpoints.sm}) {
     padding: ${(props) => props.theme.spacing.md};
+  }
+`;
+
+const LikeButton = styled.button`
+  position: absolute;
+  top: ${(props) => props.theme.spacing.md};
+  right: ${(props) => props.theme.spacing.md};
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: ${(props) => props.theme.spacing.sm};
+  font-size: 1.5rem;
+  color: ${(props) => props.theme.colors.primary.main};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+
+  &:hover {
+    transform: scale(1.1);
   }
 `;
 
@@ -59,31 +84,38 @@ const Price = styled.span`
   color: ${(props) => props.theme.colors.primary.main};
 `;
 
-export const ProductItem: React.FC<ItemProps> = ({
-  id,
-  name,
-  price,
-  category,
-  imageUrl,
-}) => {
-  return (
-    <ProductItemContainer>
-      <ImageContainer>
-        {imageUrl ? (
-          <ProductImage src={imageUrl} alt={name} />
-        ) : (
-          <span>{id}</span>
-        )}
-      </ImageContainer>
-      <ProductInfo gap="sm">
-        <ProductHeader gap="sm">
-          <Badge variant={category}>{category}</Badge>
-          <ProductName>{name}</ProductName>
-        </ProductHeader>
-        <Price>{price.toLocaleString()}원</Price>
-      </ProductInfo>
-    </ProductItemContainer>
-  );
-};
+export const ProductItem = React.memo<ItemProps>(
+  ({ id, name, price, category, imageUrl, isLiked, onLikeToggle }) => {
+    const handleLikeClick = useCallback(
+      (e: React.MouseEvent) => {
+        e.stopPropagation();
+        onLikeToggle?.({ id, name, price, category, imageUrl, isLiked });
+      },
+      [id, name, price, category, imageUrl, isLiked, onLikeToggle]
+    );
+
+    return (
+      <ProductItemContainer>
+        <ImageContainer>
+          {imageUrl ? (
+            <ProductImage src={imageUrl} alt={name} />
+          ) : (
+            <span>{id}</span>
+          )}
+        </ImageContainer>
+        <ProductInfo gap="sm">
+          <ProductHeader gap="sm">
+            <Badge variant={category}>{category}</Badge>
+            <ProductName>{name}</ProductName>
+          </ProductHeader>
+          <Price>{price.toLocaleString()}원</Price>
+        </ProductInfo>
+        <LikeButton onClick={handleLikeClick}>
+          {isLiked ? <IoHeart /> : <IoHeartOutline />}
+        </LikeButton>
+      </ProductItemContainer>
+    );
+  }
+);
 
 export default ProductItem;
