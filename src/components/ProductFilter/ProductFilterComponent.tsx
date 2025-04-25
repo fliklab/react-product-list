@@ -14,29 +14,38 @@ interface ProductFilterCommponentProps {
 const FilterContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-  padding: 1rem;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  margin-bottom: 2rem;
+  gap: ${(props) => props.theme.spacing.lg};
+  padding: ${(props) => props.theme.spacing.xl};
+  background-color: ${(props) => props.theme.colors.background.paper};
+  border-radius: ${(props) => props.theme.borderRadius.lg};
+  margin-bottom: ${(props) => props.theme.spacing.xl};
 `;
 
 const FilterGroup = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: ${(props) => props.theme.spacing.sm};
 
   label {
     min-width: 80px;
-    font-weight: 500;
+    font-weight: ${(props) => props.theme.typography.fontWeights.medium};
+    color: ${(props) => props.theme.colors.text.primary};
   }
 
   select,
   input {
-    padding: 0.5rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1rem;
+    padding: ${(props) => props.theme.spacing.sm};
+    border: 1px solid ${(props) => props.theme.colors.border.main};
+    border-radius: ${(props) => props.theme.borderRadius.sm};
+    font-size: ${(props) => props.theme.typography.fontSizes.md};
+    transition: all ${(props) => props.theme.transitions.duration.fast}
+      ${(props) => props.theme.transitions.easing.easeInOut};
+
+    &:focus {
+      outline: none;
+      border-color: ${(props) => props.theme.colors.primary.main};
+      box-shadow: ${(props) => props.theme.shadows.sm};
+    }
   }
 
   input {
@@ -44,47 +53,78 @@ const FilterGroup = styled.div`
   }
 
   span {
-    margin: 0 0.5rem;
+    margin: 0 ${(props) => props.theme.spacing.sm};
+    color: ${(props) => props.theme.colors.text.secondary};
   }
 `;
 
 const ResetButton = styled.button`
   align-self: flex-end;
-  padding: 0.5rem 1rem;
-  background-color: #ff4444;
-  color: white;
+  padding: ${(props) => props.theme.spacing.sm}
+    ${(props) => props.theme.spacing.lg};
+  background-color: ${(props) => props.theme.colors.danger.main};
+  color: ${(props) => props.theme.colors.danger.text};
   border: none;
-  border-radius: 4px;
+  border-radius: ${(props) => props.theme.borderRadius.sm};
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color
+    ${(props) => props.theme.transitions.duration.fast}
+    ${(props) => props.theme.transitions.easing.easeInOut};
+  font-weight: ${(props) => props.theme.typography.fontWeights.medium};
 
   &:hover {
-    background-color: #cc0000;
+    background-color: ${(props) => props.theme.colors.danger.dark};
   }
 `;
 
 const CategoryToggleGroup = styled.div`
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 10px;
+  gap: ${(props) => props.theme.spacing.sm};
+  margin-bottom: ${(props) => props.theme.spacing.sm};
 `;
 
 const CategoryToggle = styled.button<{ isActive: boolean }>`
-  padding: 6px 12px;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  background-color: ${(props) => (props.isActive ? "#4a90e2" : "white")};
-  color: ${(props) => (props.isActive ? "white" : "inherit")};
-  border-color: ${(props) => (props.isActive ? "#4a90e2" : "#ddd")};
+  padding: ${(props) => props.theme.spacing.sm}
+    ${(props) => props.theme.spacing.lg};
+  border: 1px solid
+    ${(props) =>
+      props.isActive
+        ? props.theme.colors.primary.main
+        : props.theme.colors.border.main};
+  border-radius: ${(props) => props.theme.borderRadius.pill};
+  background-color: ${(props) =>
+    props.isActive
+      ? props.theme.colors.primary.main
+      : props.theme.colors.background.default};
+  color: ${(props) =>
+    props.isActive
+      ? props.theme.colors.primary.text
+      : props.theme.colors.text.primary};
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all ${(props) => props.theme.transitions.duration.fast}
+    ${(props) => props.theme.transitions.easing.easeInOut};
+  font-size: ${(props) => props.theme.typography.fontSizes.sm};
+  font-weight: ${(props) => props.theme.typography.fontWeights.medium};
+
+  &:hover {
+    background-color: ${(props) =>
+      props.isActive
+        ? props.theme.colors.primary.dark
+        : props.theme.colors.grey[100]};
+  }
 `;
 
 const DebugTextArea = styled.textarea`
   width: 300px;
   height: 100px;
   font-family: monospace;
+  font-size: ${(props) => props.theme.typography.fontSizes.sm};
+  padding: ${(props) => props.theme.spacing.sm};
+  border: 1px solid ${(props) => props.theme.colors.border.main};
+  border-radius: ${(props) => props.theme.borderRadius.sm};
+  background-color: ${(props) => props.theme.colors.background.default};
+  color: ${(props) => props.theme.colors.text.primary};
 `;
 
 export const ProductFilterComponent: React.FC<ProductFilterCommponentProps> = ({
