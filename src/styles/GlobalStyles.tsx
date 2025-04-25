@@ -1,12 +1,16 @@
 import { Global, css } from "@emotion/react";
+import { fontFace, fontFamily } from "./fonts";
 
 export const GlobalStyles = () => (
   <Global
     styles={(theme) => css`
+      ${fontFace}
+
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+        ${fontFamily}
       }
 
       html,
