@@ -3,8 +3,9 @@ import { Category, Product, QueryOptions } from "../../server/types";
 import { MockProductAPI } from "../../server/api";
 import { ProductFilterComponent } from "../ProductFilter/ProductFilterComponent";
 import { ProductList } from "./ProductList";
-import { usePersistedQueryOption } from "../../hooks/usePersistedFilter";
+import { useQueryOptions } from "../../hooks/useQueryOptions";
 import { Loader } from "../common/Loader/index";
+import { SearchBox } from "../Search/SearchBox";
 import styled from "@emotion/styled";
 
 const PageContainer = styled.div`
@@ -50,19 +51,23 @@ export const ProductListContainer: React.FC = () => {
   const [hasMore, setHasMore] = useState(true);
   const [initialLoad, setInitialLoad] = useState(true);
 
-  // 페이지 새로고침/재접속 시에도 필터 상태 유지
-  const { option, updateOption, resetOption } =
-    usePersistedQueryOption("product-filter");
+  // URL 쿼리 파라미터 사용
+  const { option, updateOption, resetOption } = useQueryOptions();
+
+  // API 인스턴스를 메모이제이션
+  const api = useRef(new MockProductAPI());
 
   // 추가 데이터 로드 함수
   const fetchMoreProducts = useCallback(
-    async (option: QueryOptions, anchor?: string) => {
+    async (currentOption: QueryOptions, currentAnchor?: string) => {
       if (!hasMore || loading) return;
 
       try {
         setLoading(true);
-        const api = new MockProductAPI();
-        const data = await api.getProducts(option, anchor);
+        const data = await api.current.getProducts(
+          currentOption,
+          currentAnchor
+        );
 
         setProducts((prevProducts) => [...prevProducts, ...data.data]);
         setAnchor(data.anchor);
@@ -95,19 +100,16 @@ export const ProductListContainer: React.FC = () => {
 
   // 초기 데이터 로드
   useEffect(() => {
-    const fetchProducts = async (option: QueryOptions) => {
+    const fetchInitialProducts = async () => {
       try {
         setLoading(true);
         setInitialLoad(true);
 
-        const api = new MockProductAPI();
-        const data = await api.getProducts(option, undefined); // anchor 초기화
-
+        const data = await api.current.getProducts(option, undefined);
         setProducts(data.data);
         setAnchor(data.anchor);
         setHasMore(data.hasMore);
 
-        // 고유 카테고리 추출
         const uniqueCategories = Array.from(
           new Set(data.data.map((product: Product) => product.category))
         );
@@ -120,17 +122,28 @@ export const ProductListContainer: React.FC = () => {
       }
     };
 
-    fetchProducts(option);
+    fetchInitialProducts();
   }, [option]);
+
+  const handleSearch = (query: string) => {
+    updateOption({ searchQuery: query || undefined });
+  };
 
   return (
     <PageContainer>
       <ContentContainer>
         <ListContainer>
+          <SearchBox onSearch={handleSearch} />
           <ProductFilterComponent
             filter={option}
             categories={categories}
-            onFilterChange={updateOption}
+            onFilterChange={(newFilter) => {
+              // 검색어는 유지하고 다른 필터만 업데이트
+              updateOption({
+                ...newFilter,
+                searchQuery: option.searchQuery,
+              });
+            }}
             onReset={resetOption}
           />
 

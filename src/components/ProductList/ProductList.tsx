@@ -2,6 +2,7 @@ import { Product } from "../../server/types";
 import { ProductItem } from "./ProductItem";
 import styled from "@emotion/styled";
 import { ContainerBase, FlexContainer } from "../../styles/common";
+import { EmptyList } from "../common/EmptyList";
 
 interface ProductListProps {
   data: Product[];
@@ -22,6 +23,10 @@ export const ProductList: React.FC<ProductListProps> = ({
   data,
   lastProductRef,
 }) => {
+  if (data.length === 0) {
+    return <EmptyList message="검색 결과가 없습니다." />;
+  }
+
   return (
     <ProductListContainer>
       <FlexContainer direction="column" gap="md">
