@@ -1,6 +1,6 @@
 import React from "react";
+import styled from "@emotion/styled";
 import { CATEGORIES, Category, QueryOptions } from "../../server/types";
-import styles from "./ProductFilterComponent.module.css";
 
 type CategoryLabel = Category | "전체";
 
@@ -10,6 +10,122 @@ interface ProductFilterCommponentProps {
   onFilterChange: (filter: Partial<QueryOptions>) => void;
   onReset: () => void;
 }
+
+const FilterContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: ${(props) => props.theme.spacing.lg};
+  padding: ${(props) => props.theme.spacing.xl};
+  background-color: ${(props) => props.theme.colors.background.paper};
+  border-radius: ${(props) => props.theme.borderRadius.lg};
+  margin-bottom: ${(props) => props.theme.spacing.xl};
+`;
+
+const FilterGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${(props) => props.theme.spacing.sm};
+
+  label {
+    min-width: 80px;
+    font-weight: ${(props) => props.theme.typography.fontWeights.medium};
+    color: ${(props) => props.theme.colors.text.primary};
+  }
+
+  select,
+  input {
+    padding: ${(props) => props.theme.spacing.sm};
+    border: 1px solid ${(props) => props.theme.colors.border.main};
+    border-radius: ${(props) => props.theme.borderRadius.sm};
+    font-size: ${(props) => props.theme.typography.fontSizes.md};
+    transition: all ${(props) => props.theme.transitions.duration.fast}
+      ${(props) => props.theme.transitions.easing.easeInOut};
+
+    &:focus {
+      outline: none;
+      border-color: ${(props) => props.theme.colors.primary.main};
+      box-shadow: ${(props) => props.theme.shadows.sm};
+    }
+  }
+
+  input {
+    width: 120px;
+  }
+
+  span {
+    margin: 0 ${(props) => props.theme.spacing.sm};
+    color: ${(props) => props.theme.colors.text.secondary};
+  }
+`;
+
+const ResetButton = styled.button`
+  align-self: flex-end;
+  padding: ${(props) => props.theme.spacing.sm}
+    ${(props) => props.theme.spacing.lg};
+  background-color: ${(props) => props.theme.colors.danger.main};
+  color: ${(props) => props.theme.colors.danger.text};
+  border: none;
+  border-radius: ${(props) => props.theme.borderRadius.sm};
+  cursor: pointer;
+  transition: background-color
+    ${(props) => props.theme.transitions.duration.fast}
+    ${(props) => props.theme.transitions.easing.easeInOut};
+  font-weight: ${(props) => props.theme.typography.fontWeights.medium};
+
+  &:hover {
+    background-color: ${(props) => props.theme.colors.danger.dark};
+  }
+`;
+
+const CategoryToggleGroup = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: ${(props) => props.theme.spacing.sm};
+  margin-bottom: ${(props) => props.theme.spacing.sm};
+`;
+
+const CategoryToggle = styled.button<{ isActive: boolean }>`
+  padding: ${(props) => props.theme.spacing.sm}
+    ${(props) => props.theme.spacing.lg};
+  border: 1px solid
+    ${(props) =>
+      props.isActive
+        ? props.theme.colors.primary.main
+        : props.theme.colors.border.main};
+  border-radius: ${(props) => props.theme.borderRadius.pill};
+  background-color: ${(props) =>
+    props.isActive
+      ? props.theme.colors.primary.main
+      : props.theme.colors.background.default};
+  color: ${(props) =>
+    props.isActive
+      ? props.theme.colors.primary.text
+      : props.theme.colors.text.primary};
+  cursor: pointer;
+  transition: all ${(props) => props.theme.transitions.duration.fast}
+    ${(props) => props.theme.transitions.easing.easeInOut};
+  font-size: ${(props) => props.theme.typography.fontSizes.sm};
+  font-weight: ${(props) => props.theme.typography.fontWeights.medium};
+
+  &:hover {
+    background-color: ${(props) =>
+      props.isActive
+        ? props.theme.colors.primary.dark
+        : props.theme.colors.grey[100]};
+  }
+`;
+
+const DebugTextArea = styled.textarea`
+  width: 300px;
+  height: 100px;
+  font-family: monospace;
+  font-size: ${(props) => props.theme.typography.fontSizes.sm};
+  padding: ${(props) => props.theme.spacing.sm};
+  border: 1px solid ${(props) => props.theme.colors.border.main};
+  border-radius: ${(props) => props.theme.borderRadius.sm};
+  background-color: ${(props) => props.theme.colors.background.default};
+  color: ${(props) => props.theme.colors.text.primary};
+`;
 
 export const ProductFilterComponent: React.FC<ProductFilterCommponentProps> = ({
   filter,
@@ -64,33 +180,29 @@ export const ProductFilterComponent: React.FC<ProductFilterCommponentProps> = ({
   };
 
   return (
-    <div className={styles.productFilter}>
-      <div className={styles.filterGroup}>
+    <FilterContainer>
+      <FilterGroup>
         <label>카테고리:</label>
-        <div className={styles.categoryToggleGroup}>
-          <button
-            className={`${styles.categoryToggle} ${
-              isCategorySelected("전체") ? styles.active : ""
-            }`}
+        <CategoryToggleGroup>
+          <CategoryToggle
+            isActive={isCategorySelected("전체")}
             onClick={() => handleCategoryToggle("전체")}
           >
             전체
-          </button>
+          </CategoryToggle>
           {CATEGORIES.map((category) => (
-            <button
+            <CategoryToggle
               key={category}
-              className={`${styles.categoryToggle} ${
-                isCategorySelected(category) ? styles.active : ""
-              }`}
+              isActive={isCategorySelected(category)}
               onClick={() => handleCategoryToggle(category)}
             >
               {category}
-            </button>
+            </CategoryToggle>
           ))}
-        </div>
-      </div>
+        </CategoryToggleGroup>
+      </FilterGroup>
 
-      <div className={styles.filterGroup}>
+      <FilterGroup>
         <label>가격:</label>
         <input
           type="number"
@@ -105,9 +217,9 @@ export const ProductFilterComponent: React.FC<ProductFilterCommponentProps> = ({
           value={filter.maxPrice || ""}
           onChange={(e) => handlePriceChange("maxPrice", e.target.value)}
         />
-      </div>
+      </FilterGroup>
 
-      <div className={styles.filterGroup}>
+      <FilterGroup>
         <label>정렬:</label>
         <select
           value={
@@ -121,20 +233,14 @@ export const ProductFilterComponent: React.FC<ProductFilterCommponentProps> = ({
           <option value="name-asc">이름 오름차순</option>
           <option value="name-desc">이름 내림차순</option>
         </select>
-      </div>
+      </FilterGroup>
 
-      <div className={styles.filterGroup}>
+      <FilterGroup>
         <label>디버그:</label>
-        <textarea
-          value={JSON.stringify(filter, null, 2)}
-          readOnly
-          style={{ width: "300px", height: "100px", fontFamily: "monospace" }}
-        />
-      </div>
+        <DebugTextArea value={JSON.stringify(filter, null, 2)} readOnly />
+      </FilterGroup>
 
-      <button className={styles.resetButton} onClick={onReset}>
-        필터 초기화
-      </button>
-    </div>
+      <ResetButton onClick={onReset}>필터 초기화</ResetButton>
+    </FilterContainer>
   );
 };
