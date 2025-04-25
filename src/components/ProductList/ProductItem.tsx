@@ -1,9 +1,15 @@
 import { Product } from "../../server/types";
 import styled from "@emotion/styled";
+import {
+  Badge,
+  CardBase,
+  FlexContainer,
+  responsiveText,
+} from "../../styles/common";
 
 export type ItemProps = Product;
 
-const ProductItemContainer = styled.div`
+const ProductItemContainer = styled(CardBase)`
   display: flex;
   flex-direction: row;
   padding: ${(props) => props.theme.spacing.lg};
@@ -35,49 +41,29 @@ const ProductImage = styled.img`
   object-fit: cover;
 `;
 
-const ProductInfo = styled.div`
+const ProductInfo = styled(FlexContainer)`
   flex: 1;
-  display: flex;
   flex-direction: column;
-  gap: ${(props) => props.theme.spacing.sm};
+  align-items: flex-start;
 `;
 
-const ProductHeader = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: ${(props) => props.theme.spacing.sm};
+const ProductHeader = styled(FlexContainer)`
   flex-wrap: wrap;
 `;
 
-const Category = styled.span`
-  font-size: ${(props) => props.theme.typography.fontSizes.sm};
-  color: ${(props) => props.theme.colors.text.secondary};
-  background-color: ${(props) => props.theme.colors.background.paper};
-  padding: ${(props) => props.theme.spacing.xs}
-    ${(props) => props.theme.spacing.sm};
-  border-radius: ${(props) => props.theme.borderRadius.sm};
-`;
+const Category = styled(Badge)``;
 
 const ProductName = styled.h3`
-  font-size: ${(props) => props.theme.typography.fontSizes.lg};
+  ${responsiveText("lg")}
   font-weight: ${(props) => props.theme.typography.fontWeights.bold};
   color: ${(props) => props.theme.colors.text.primary};
   margin: 0;
-
-  @media (max-width: ${(props) => props.theme.breakpoints.sm}) {
-    font-size: ${(props) => props.theme.typography.fontSizes.md};
-  }
 `;
 
 const Price = styled.span`
-  font-size: ${(props) => props.theme.typography.fontSizes.lg};
+  ${responsiveText("lg")}
   font-weight: ${(props) => props.theme.typography.fontWeights.bold};
   color: ${(props) => props.theme.colors.primary.main};
-
-  @media (max-width: ${(props) => props.theme.breakpoints.sm}) {
-    font-size: ${(props) => props.theme.typography.fontSizes.md};
-  }
 `;
 
 export const ProductItem: React.FC<ItemProps> = ({
@@ -96,8 +82,8 @@ export const ProductItem: React.FC<ItemProps> = ({
           <span>{id}</span>
         )}
       </ImageContainer>
-      <ProductInfo>
-        <ProductHeader>
+      <ProductInfo gap="sm">
+        <ProductHeader gap="sm">
           <Category>{category}</Category>
           <ProductName>{name}</ProductName>
         </ProductHeader>
