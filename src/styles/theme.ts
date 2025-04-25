@@ -151,7 +151,7 @@ const BASE_COLORS = {
   },
 };
 
-export const theme = {
+const lightTheme = {
   colors: {
     primary: {
       main: BASE_COLORS.blue.main,
@@ -217,12 +217,12 @@ export const theme = {
   },
   typography: {
     fontSizes: {
-      xs: "0.75rem", // 12px
-      sm: "0.875rem", // 14px
-      md: "1rem", // 16px
-      lg: "1.125rem", // 18px
-      xl: "1.25rem", // 20px
-      xxl: "1.5rem", // 24px
+      xs: "0.75rem",
+      sm: "0.875rem",
+      md: "1rem",
+      lg: "1.125rem",
+      xl: "1.25rem",
+      xxl: "1.5rem",
     },
     fontWeights: {
       light: 300,
@@ -270,6 +270,8 @@ export const theme = {
     toast: 500,
   },
 } as const;
+
+export const theme = lightTheme;
 
 // Theme 타입 추출
 export type Theme = typeof theme;
