@@ -4,16 +4,15 @@ import { LikedItemCard } from "./LikedItemCard";
 
 const Container = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1rem;
-  width: 100%;
-  max-width: 1024px;
-  margin: 4rem auto 0;
-  padding: 1rem;
-
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  width: 100vw;
+  padding: 12px;
+  margin: 0;
+  box-sizing: border-box;
   @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    max-width: 480px;
+    gap: 8px;
+    padding: 8px;
   }
 `;
 

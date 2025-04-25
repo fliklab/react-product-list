@@ -6,9 +6,11 @@ const CardContainer = styled.div`
   display: flex;
   flex-direction: column;
   background: white;
-  border-radius: 8px;
+  border-radius: 12px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
   height: 100%;
   transition: transform 0.2s ease-in-out;
 
@@ -23,6 +25,7 @@ const ImageContainer = styled.div`
   width: 100%;
   padding-bottom: 100%;
   background: #f0f0f0;
+  box-sizing: border-box;
 `;
 
 const ProductImage = styled.img`
@@ -47,27 +50,31 @@ const Image = ({ src, alt }: { src: string; alt: string }) => {
 
 const Content = styled.div`
   flex: 1;
-  padding: 1rem;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 8px;
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 const Name = styled.h3`
   margin: 0;
-  font-size: 1rem;
+  font-size: 14px;
+  font-weight: 500;
   line-height: 1.4;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
+  word-break: break-all;
 `;
 
 const Price = styled.span`
   color: ${(props) => props.theme.colors.primary.main};
-  font-weight: bold;
-  font-size: 1.1rem;
+  font-weight: 600;
+  font-size: 16px;
 `;
 
 const DeleteButton = styled.button`
