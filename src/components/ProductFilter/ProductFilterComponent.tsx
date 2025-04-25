@@ -1,6 +1,6 @@
 import React from "react";
+import styled from "@emotion/styled";
 import { CATEGORIES, Category, QueryOptions } from "../../server/types";
-import styles from "./ProductFilterComponent.module.css";
 
 type CategoryLabel = Category | "전체";
 
@@ -10,6 +10,82 @@ interface ProductFilterCommponentProps {
   onFilterChange: (filter: Partial<QueryOptions>) => void;
   onReset: () => void;
 }
+
+const FilterContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+`;
+
+const FilterGroup = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  label {
+    min-width: 80px;
+    font-weight: 500;
+  }
+
+  select,
+  input {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+  }
+
+  input {
+    width: 120px;
+  }
+
+  span {
+    margin: 0 0.5rem;
+  }
+`;
+
+const ResetButton = styled.button`
+  align-self: flex-end;
+  padding: 0.5rem 1rem;
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #cc0000;
+  }
+`;
+
+const CategoryToggleGroup = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+`;
+
+const CategoryToggle = styled.button<{ isActive: boolean }>`
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  background-color: ${(props) => (props.isActive ? "#4a90e2" : "white")};
+  color: ${(props) => (props.isActive ? "white" : "inherit")};
+  border-color: ${(props) => (props.isActive ? "#4a90e2" : "#ddd")};
+  cursor: pointer;
+  transition: all 0.2s;
+`;
+
+const DebugTextArea = styled.textarea`
+  width: 300px;
+  height: 100px;
+  font-family: monospace;
+`;
 
 export const ProductFilterComponent: React.FC<ProductFilterCommponentProps> = ({
   filter,
@@ -64,33 +140,29 @@ export const ProductFilterComponent: React.FC<ProductFilterCommponentProps> = ({
   };
 
   return (
-    <div className={styles.productFilter}>
-      <div className={styles.filterGroup}>
+    <FilterContainer>
+      <FilterGroup>
         <label>카테고리:</label>
-        <div className={styles.categoryToggleGroup}>
-          <button
-            className={`${styles.categoryToggle} ${
-              isCategorySelected("전체") ? styles.active : ""
-            }`}
+        <CategoryToggleGroup>
+          <CategoryToggle
+            isActive={isCategorySelected("전체")}
             onClick={() => handleCategoryToggle("전체")}
           >
             전체
-          </button>
+          </CategoryToggle>
           {CATEGORIES.map((category) => (
-            <button
+            <CategoryToggle
               key={category}
-              className={`${styles.categoryToggle} ${
-                isCategorySelected(category) ? styles.active : ""
-              }`}
+              isActive={isCategorySelected(category)}
               onClick={() => handleCategoryToggle(category)}
             >
               {category}
-            </button>
+            </CategoryToggle>
           ))}
-        </div>
-      </div>
+        </CategoryToggleGroup>
+      </FilterGroup>
 
-      <div className={styles.filterGroup}>
+      <FilterGroup>
         <label>가격:</label>
         <input
           type="number"
@@ -105,9 +177,9 @@ export const ProductFilterComponent: React.FC<ProductFilterCommponentProps> = ({
           value={filter.maxPrice || ""}
           onChange={(e) => handlePriceChange("maxPrice", e.target.value)}
         />
-      </div>
+      </FilterGroup>
 
-      <div className={styles.filterGroup}>
+      <FilterGroup>
         <label>정렬:</label>
         <select
           value={
@@ -121,20 +193,14 @@ export const ProductFilterComponent: React.FC<ProductFilterCommponentProps> = ({
           <option value="name-asc">이름 오름차순</option>
           <option value="name-desc">이름 내림차순</option>
         </select>
-      </div>
+      </FilterGroup>
 
-      <div className={styles.filterGroup}>
+      <FilterGroup>
         <label>디버그:</label>
-        <textarea
-          value={JSON.stringify(filter, null, 2)}
-          readOnly
-          style={{ width: "300px", height: "100px", fontFamily: "monospace" }}
-        />
-      </div>
+        <DebugTextArea value={JSON.stringify(filter, null, 2)} readOnly />
+      </FilterGroup>
 
-      <button className={styles.resetButton} onClick={onReset}>
-        필터 초기화
-      </button>
-    </div>
+      <ResetButton onClick={onReset}>필터 초기화</ResetButton>
+    </FilterContainer>
   );
 };
