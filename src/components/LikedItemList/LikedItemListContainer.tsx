@@ -1,5 +1,5 @@
-import { useLikedItems } from "../hooks/useLikedItems";
-import { LikedItemList } from "../components/LikedItemList";
+import { useLikedItems } from "../../hooks/useLikedItems";
+import { LikedItemList } from "./LikedItemList";
 
 export const LikedItemListContainer = () => {
   const { likedItems, removeItem } = useLikedItems();

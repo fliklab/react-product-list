@@ -1,16 +1,27 @@
 import styled from "@emotion/styled";
-import { LikedItem } from "../types/like";
+import { LikedItem } from "../../types/like";
 import { LikedItemCard } from "./LikedItemCard";
 
 const Container = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  max-width: 1024px;
+  margin: 4rem auto 0;
   padding: 1rem;
-  margin-top: 4rem;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+  }
 `;
 
 const EmptyMessage = styled.p`
   text-align: center;
   color: #666;
   margin-top: 2rem;
+  width: 100%;
 `;
 
 interface Props {

@@ -1,4 +1,4 @@
-import { LikedItemListContainer } from "../containers/LikedItemListContainer";
+import { LikedItemListContainer } from "../components/LikedItemList/LikedItemListContainer";
 import styled from "@emotion/styled";
 
 const PageContainer = styled.div`
