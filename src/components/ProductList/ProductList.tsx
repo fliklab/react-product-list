@@ -9,17 +9,20 @@ interface ProductListProps {
 
 const ProductListContainer = styled.div`
   display: flex;
-  flex: 1;
   flex-direction: column;
   gap: ${(props) => props.theme.spacing.md};
-  justify-content: center;
-  align-items: center;
-  padding: ${(props) => props.theme.spacing.lg};
+  width: 100%;
+  max-width: ${(props) => props.theme.breakpoints.lg};
+  margin: 0 auto;
+  padding: ${(props) => props.theme.spacing.md};
+
+  @media (max-width: ${(props) => props.theme.breakpoints.md}) {
+    padding: ${(props) => props.theme.spacing.sm};
+  }
 `;
 
 const ProductItemWrapper = styled.div`
   width: 100%;
-  max-width: ${(props) => props.theme.breakpoints.lg};
   background-color: ${(props) => props.theme.colors.background.default};
   border-radius: ${(props) => props.theme.borderRadius.md};
   box-shadow: ${(props) => props.theme.shadows.sm};
