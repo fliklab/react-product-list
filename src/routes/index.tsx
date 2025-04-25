@@ -1,6 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
-import { ProductListContainer } from "../components/ProductList/ProductListContainer";
+import { MainPage } from "./MainPage";
 import { LikedItemsPage } from "../pages/LikedItemsPage";
 
 export const router = createBrowserRouter([
@@ -9,11 +9,11 @@ export const router = createBrowserRouter([
     element: <App />,
     children: [
       {
-        path: "/",
-        element: <ProductListContainer />,
+        index: true,
+        element: <MainPage />,
       },
       {
-        path: "/liked",
+        path: "liked",
         element: <LikedItemsPage />,
       },
     ],

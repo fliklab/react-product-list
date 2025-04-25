@@ -1,10 +1,8 @@
 import { ThemeProvider } from "@emotion/react";
 import styled from "@emotion/styled";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { theme } from "./styles/theme";
 import { GlobalStyles } from "./styles/GlobalStyles";
-import { MainPage } from "./routes/MainPage";
-import { LikedItemsPage } from "./pages/LikedItemsPage";
 import { TopBar } from "./components/TopBar";
 
 const AppWrapper = styled.div`
@@ -37,15 +35,10 @@ function App() {
       <GlobalStyles />
       <AppWrapper>
         <AppContainer>
-          <Router>
-            <TopBar />
-            <PageContent>
-              <Routes>
-                <Route path="/" element={<MainPage />} />
-                <Route path="/liked" element={<LikedItemsPage />} />
-              </Routes>
-            </PageContent>
-          </Router>
+          <TopBar />
+          <PageContent>
+            <Outlet />
+          </PageContent>
         </AppContainer>
       </AppWrapper>
     </ThemeProvider>
