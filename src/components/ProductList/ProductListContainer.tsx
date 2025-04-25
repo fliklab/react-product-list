@@ -5,6 +5,7 @@ import { ProductFilterComponent } from "../ProductFilter/ProductFilterComponent"
 import { ProductList } from "./ProductList";
 import { useQueryOptions } from "../../hooks/useQueryOptions";
 import { Loader } from "../common/Loader/index";
+import { SearchBox } from "../Search/SearchBox";
 import styled from "@emotion/styled";
 
 const PageContainer = styled.div`
@@ -124,10 +125,15 @@ export const ProductListContainer: React.FC = () => {
     fetchInitialProducts();
   }, [option]);
 
+  const handleSearch = (query: string) => {
+    updateOption({ ...option, searchQuery: query || undefined });
+  };
+
   return (
     <PageContainer>
       <ContentContainer>
         <ListContainer>
+          <SearchBox onSearch={handleSearch} />
           <ProductFilterComponent
             filter={option}
             categories={categories}

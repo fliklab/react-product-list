@@ -1,4 +1,4 @@
-import { mockProducts } from "./data";
+import { keywords, mockProducts } from "./data";
 import { ApiResponse, QueryOptions, Product } from "./types";
 
 // 앵커 기반 시스템 구현
@@ -129,9 +129,18 @@ export class MockProductAPI {
     products: Product[],
     options: QueryOptions
   ): Product[] {
-    const { categories, minPrice, maxPrice, sortBy, sortOrder } = options;
+    const { categories, minPrice, maxPrice, sortBy, sortOrder, searchQuery } =
+      options;
 
     const isProductIncluded = (product: Product) => {
+      // 검색어 필터링
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const nameMatch = product.name.toLowerCase().includes(query);
+        const categoryMatch = product.category.toLowerCase().includes(query);
+        if (!nameMatch && !categoryMatch) return false;
+      }
+
       if (categories?.length && !categories.includes(product.category))
         return false;
       if (minPrice && product.price < minPrice) return false;
@@ -152,5 +161,57 @@ export class MockProductAPI {
     });
 
     return filteredProducts;
+  }
+
+  // 추천 검색어 조회
+  async getSuggestions(query: string): Promise<string[]> {
+    if (query.length < 1) return [];
+
+    const suggestKeywords = keywords
+      .filter((keyword) => keyword.startsWith(query))
+      .slice(0, 5);
+
+    // 검색어가 1글자인 경우 키워드만 검색해서 추천
+    if (query.length === 1) {
+      console.log("getSuggestions", { query, suggestions: suggestKeywords });
+      return suggestKeywords;
+    }
+    // 검색어로 상품 필터링
+    const suggestProducts = this.products
+      .filter((product) => {
+        const name = product.name.toLowerCase();
+        const searchQuery = query.toLowerCase();
+
+        // 1. 상품명이 검색어로 시작하는 경우
+        // 2. 상품명에 검색어가 포함된 경우
+        return name.startsWith(searchQuery) || name.includes(searchQuery);
+      })
+      .sort((a, b) => {
+        const aName = a.name.toLowerCase();
+        const bName = b.name.toLowerCase();
+        const searchQuery = query.toLowerCase();
+
+        // 정확도에 따른 정렬
+        const aStartsWithName = aName.startsWith(searchQuery) ? 0 : 1;
+        const bStartsWithName = bName.startsWith(searchQuery) ? 0 : 1;
+
+        return aStartsWithName - bStartsWithName;
+      })
+      .slice(0, 5)
+      .map((suggestion) => suggestion.name);
+
+    const suggestions = [
+      ...suggestKeywords.slice(0, 2),
+      ...suggestProducts.slice(0, 3),
+    ];
+
+    // 네트워크 지연 시뮬레이션 (실제 서버 환경과 비슷하게)
+    await new Promise((resolve) =>
+      setTimeout(resolve, 100 + Math.random() * 100)
+    );
+
+    console.log("getSuggestions", { query, suggestions });
+
+    return suggestions;
   }
 }
