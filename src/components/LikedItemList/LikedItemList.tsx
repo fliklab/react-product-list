@@ -10,6 +10,8 @@ const Container = styled.div`
   padding: 12px;
   margin: 0;
   box-sizing: border-box;
+  max-width: 540px;
+
   @media (max-width: 768px) {
     gap: 8px;
     padding: 8px;
