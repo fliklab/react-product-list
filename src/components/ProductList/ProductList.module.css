@@ -1,8 +1,0 @@
-.productList {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  gap: 12px;
-  justify-content: center;
-  align-items: center;
-}
