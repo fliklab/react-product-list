@@ -132,7 +132,8 @@ export class MockProductAPI {
     const { categories, minPrice, maxPrice, sortBy, sortOrder } = options;
 
     const isProductIncluded = (product: Product) => {
-      if (categories && !categories.includes(product.category)) return false;
+      if (categories?.length && !categories.includes(product.category))
+        return false;
       if (minPrice && product.price < minPrice) return false;
       if (maxPrice && product.price > maxPrice) return false;
       return true;
