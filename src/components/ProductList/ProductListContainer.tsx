@@ -126,7 +126,7 @@ export const ProductListContainer: React.FC = () => {
   }, [option]);
 
   const handleSearch = (query: string) => {
-    updateOption({ ...option, searchQuery: query || undefined });
+    updateOption({ searchQuery: query || undefined });
   };
 
   return (
@@ -137,7 +137,13 @@ export const ProductListContainer: React.FC = () => {
           <ProductFilterComponent
             filter={option}
             categories={categories}
-            onFilterChange={updateOption}
+            onFilterChange={(newFilter) => {
+              // 검색어는 유지하고 다른 필터만 업데이트
+              updateOption({
+                ...newFilter,
+                searchQuery: option.searchQuery,
+              });
+            }}
             onReset={resetOption}
           />
 

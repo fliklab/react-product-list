@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useDebounce } from "./useDebounce";
 import { MockProductAPI } from "../server/api";
+import { useSearchParams } from "react-router-dom";
 
 interface UseSearchBoxProps {
   onSearch: (query: string) => void;
@@ -26,7 +27,8 @@ interface UseSearchBoxReturn {
 export const useSearchBox = ({
   onSearch,
 }: UseSearchBoxProps): UseSearchBoxReturn => {
-  const [query, setQuery] = useState("");
+  const [searchParams] = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get("searchQuery") || "");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
 
@@ -35,6 +37,14 @@ export const useSearchBox = ({
   const api = useRef(new MockProductAPI());
 
   const debouncedQuery = useDebounce(query, 300);
+
+  // URL의 searchQuery가 변경될 때 검색어 상태 업데이트
+  useEffect(() => {
+    const urlQuery = searchParams.get("searchQuery");
+    if (urlQuery !== null && urlQuery !== query) {
+      setQuery(urlQuery);
+    }
+  }, [query, searchParams]);
 
   useEffect(() => {
     const fetchSuggestions = async () => {
