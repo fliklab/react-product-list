@@ -201,7 +201,6 @@ export const ProductFilterComponent: React.FC<ProductFilterCommponentProps> = ({
           ))}
         </CategoryToggleGroup>
       </FilterGroup>
-
       <FilterGroup>
         <label>가격:</label>
         <input
@@ -218,7 +217,6 @@ export const ProductFilterComponent: React.FC<ProductFilterCommponentProps> = ({
           onChange={(e) => handlePriceChange("maxPrice", e.target.value)}
         />
       </FilterGroup>
-
       <FilterGroup>
         <label>정렬:</label>
         <select
@@ -234,12 +232,6 @@ export const ProductFilterComponent: React.FC<ProductFilterCommponentProps> = ({
           <option value="name-desc">이름 내림차순</option>
         </select>
       </FilterGroup>
-
-      <FilterGroup>
-        <label>디버그:</label>
-        <DebugTextArea value={JSON.stringify(filter, null, 2)} readOnly />
-      </FilterGroup>
-
       <ResetButton onClick={onReset}>필터 초기화</ResetButton>
     </FilterContainer>
   );
