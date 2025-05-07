@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { LikedItems, LikedItem } from "../types/like";
 import {
   getLikedItems,
@@ -7,11 +7,7 @@ import {
 } from "../utils/localStorage";
 
 export const useLikedItems = () => {
-  const [likedItems, setLikedItems] = useState<LikedItems>({});
-
-  useEffect(() => {
-    setLikedItems(getLikedItems());
-  }, []);
+  const [likedItems, setLikedItems] = useState<LikedItems>(getLikedItems());
 
   const toggleItem = useCallback((item: LikedItem) => {
     const isLiked = toggleLikedItem(item);
