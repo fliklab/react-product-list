@@ -1,5 +1,5 @@
+import { LikedItemListContainer } from "../components/LikedItemList/LikedItemListContainer";
 import styled from "@emotion/styled";
-import { ProductListContainer } from "../components/ProductList/ProductListContainer";
 
 const PageContainer = styled.div`
   display: flex;
@@ -9,10 +9,10 @@ const PageContainer = styled.div`
   width: 100%;
 `;
 
-export function MainPage() {
+export const LikedItemsPage = () => {
   return (
     <PageContainer>
-      <ProductListContainer />
+      <LikedItemListContainer />
     </PageContainer>
   );
-}
+};

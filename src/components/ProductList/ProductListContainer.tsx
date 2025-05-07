@@ -7,6 +7,7 @@ import { useQueryOptions } from "../../hooks/useQueryOptions";
 import { Loader } from "../common/Loader/index";
 import { SearchBox } from "../Search/SearchBox";
 import styled from "@emotion/styled";
+import { useLikedItems } from "../../hooks/useLikedItems";
 
 const PageContainer = styled.div`
   flex: 1;
@@ -45,6 +46,7 @@ export const ProductListContainer: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [isFetched, setIsFetched] = useState(false);
 
   // 무한 스크롤을 위한 상태들
   const [anchor, setAnchor] = useState<string | undefined>(undefined);
@@ -53,6 +55,7 @@ export const ProductListContainer: React.FC = () => {
 
   // URL 쿼리 파라미터 사용
   const { option, updateOption, resetOption } = useQueryOptions();
+  const { toggleItem, isItemLiked } = useLikedItems();
 
   // API 인스턴스를 메모이제이션
   const api = useRef(new MockProductAPI());
@@ -69,7 +72,15 @@ export const ProductListContainer: React.FC = () => {
           currentAnchor
         );
 
-        setProducts((prevProducts) => [...prevProducts, ...data.data]);
+        const productsWithLikeStatus = data.data.map((product) => ({
+          ...product,
+          isLiked: isItemLiked(Number(product.id)),
+        }));
+
+        setProducts((prevProducts) => [
+          ...prevProducts,
+          ...productsWithLikeStatus,
+        ]);
         setAnchor(data.anchor);
         setHasMore(data.hasMore);
       } catch (error) {
@@ -78,7 +89,7 @@ export const ProductListContainer: React.FC = () => {
         setLoading(false);
       }
     },
-    [hasMore, loading]
+    [hasMore, loading, isItemLiked]
   );
 
   const observer = useRef<IntersectionObserver | null>(null);
@@ -101,12 +112,20 @@ export const ProductListContainer: React.FC = () => {
   // 초기 데이터 로드
   useEffect(() => {
     const fetchInitialProducts = async () => {
+      // 이미 데이터를 불러왔다면 다시 불러오지 않음
+      if (isFetched) return;
+
       try {
         setLoading(true);
         setInitialLoad(true);
 
         const data = await api.current.getProducts(option, undefined);
-        setProducts(data.data);
+        const productsWithLikeStatus = data.data.map((product) => ({
+          ...product,
+          isLiked: isItemLiked(Number(product.id)),
+        }));
+
+        setProducts(productsWithLikeStatus);
         setAnchor(data.anchor);
         setHasMore(data.hasMore);
 
@@ -114,6 +133,7 @@ export const ProductListContainer: React.FC = () => {
           new Set(data.data.map((product: Product) => product.category))
         );
         setCategories(uniqueCategories);
+        setIsFetched(true);
       } catch (error) {
         console.error("상품 로딩 실패:", error);
       } finally {
@@ -123,11 +143,41 @@ export const ProductListContainer: React.FC = () => {
     };
 
     fetchInitialProducts();
-  }, [option]);
+  }, [option]); // isItemLiked 제거, option만 의존성으로 유지
+
+  // 좋아요 상태가 변경될 때마다 products 상태 업데이트
+  useEffect(() => {
+    if (!isFetched) return;
+
+    setProducts((prevProducts) =>
+      prevProducts.map((product) => ({
+        ...product,
+        isLiked: isItemLiked(Number(product.id)),
+      }))
+    );
+  }, [isItemLiked, isFetched]);
 
   const handleSearch = (query: string) => {
+    setIsFetched(false); // 검색어가 변경되면 다시 fetch 하도록 설정
     updateOption({ searchQuery: query || undefined });
   };
+
+  const handleLikeToggle = useCallback(
+    (product: Product) => {
+      const isLiked = toggleItem({
+        id: Number(product.id),
+        name: product.name,
+        price: product.price,
+        image: product.imageUrl || "",
+      });
+
+      // 개별 상품의 isLiked 상태만 업데이트
+      setProducts((prevProducts) =>
+        prevProducts.map((p) => (p.id === product.id ? { ...p, isLiked } : p))
+      );
+    },
+    [toggleItem]
+  );
 
   return (
     <PageContainer>
@@ -153,7 +203,11 @@ export const ProductListContainer: React.FC = () => {
             </LoaderWrapper>
           ) : (
             <>
-              <ProductList data={products} lastProductRef={lastProductRef} />
+              <ProductList
+                data={products}
+                lastProductRef={lastProductRef}
+                onLikeToggle={handleLikeToggle}
+              />
               {loading && !initialLoad && (
                 <LoaderWrapper>
                   <Loader size="small" text="추가 상품을 불러오는 중..." />

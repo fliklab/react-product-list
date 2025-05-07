@@ -1,12 +1,16 @@
 import { Global, css } from "@emotion/react";
+import { fontFace, fontFamily } from "./fonts";
 
 export const GlobalStyles = () => (
   <Global
     styles={(theme) => css`
+      ${fontFace}
+
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+        ${fontFamily}
       }
 
       html,
@@ -17,6 +21,31 @@ export const GlobalStyles = () => (
         padding: 0;
         flex: 1;
         display: flex;
+      }
+
+      button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font: inherit;
+        padding: 0;
+        margin: 0;
+        outline: none;
+        color: inherit;
+        text-align: inherit;
+        text-decoration: none;
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+      }
+
+      button:focus {
+        outline: none;
+      }
+
+      button:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
       }
 
       html {

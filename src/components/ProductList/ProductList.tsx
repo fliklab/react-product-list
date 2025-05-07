@@ -7,6 +7,7 @@ import { EmptyList } from "../common/EmptyList";
 interface ProductListProps {
   data: Product[];
   lastProductRef?: (node: HTMLDivElement | null) => void;
+  onLikeToggle?: (product: Product) => void;
 }
 
 const ProductListContainer = styled(ContainerBase)`
@@ -22,6 +23,7 @@ const ProductItemWrapper = styled.div`
 export const ProductList: React.FC<ProductListProps> = ({
   data,
   lastProductRef,
+  onLikeToggle,
 }) => {
   if (data.length === 0) {
     return <EmptyList message="검색 결과가 없습니다." />;
@@ -39,7 +41,7 @@ export const ProductList: React.FC<ProductListProps> = ({
                 : undefined
             }
           >
-            <ProductItem {...product} />
+            <ProductItem {...product} onLikeToggle={onLikeToggle} />
           </ProductItemWrapper>
         ))}
       </FlexContainer>
